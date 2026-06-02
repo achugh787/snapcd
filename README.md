@@ -1,4 +1,4 @@
-# snapback-cli
+# snapcd
 
 > Automatically snapshot your local dev environment every time you `cd` into a project, and diff any two snapshots to see exactly what changed.
 
@@ -7,7 +7,7 @@ Solves the "it worked yesterday" problem — instead of guessing why your app br
 ## Install
 
 ```sh
-npm install -g snapback-cli
+npm install -g snapcd
 ```
 
 ## What it tracks

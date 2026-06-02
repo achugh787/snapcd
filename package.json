@@ -1,5 +1,5 @@
 {
-  "name": "snapback-cli",
+  "name": "snapcd",
   "version": "1.0.0",
   "description": "Automatically snapshot your local dev environment on cd and diff any two snapshots to see what changed.",
   "type": "module",
@@ -22,11 +22,11 @@
   "author": "akchugh-deloitte",
   "repository": {
     "type": "git",
-    "url": "https://github.com/akchugh-deloitte/snapback-cli.git"
+    "url": "https://github.com/akchugh-deloitte/snapcd.git"
   },
-  "homepage": "https://github.com/akchugh-deloitte/snapback-cli#readme",
+  "homepage": "https://github.com/akchugh-deloitte/snapcd#readme",
   "bugs": {
-    "url": "https://github.com/akchugh-deloitte/snapback-cli/issues"
+    "url": "https://github.com/akchugh-deloitte/snapcd/issues"
   },
   "license": "MIT",
   "dependencies": {
