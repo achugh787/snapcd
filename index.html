@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>snapcd — docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f5f0;
+    --bg2: #edeae3;
+    --fg: #1a1a18;
+    --fg2: #5a5a52;
+    --fg3: #9a9a8f;
+    --accent: #2a5c45;
+    --accent-bg: #e8f2ec;
+    --warn: #7a4a1a;
+    --warn-bg: #f5ece0;
+    --add: #1a4a2a;
+    --add-bg: #e0f0e8;
+    --rem: #6a1a1a;
+    --rem-bg: #f5e0e0;
+    --border: #d8d4cc;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 24px 96px;
+  }
+
+  /* NAV */
+  .site-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 48px;
+  }
+  .logo {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a {
+    color: var(--fg2);
+    text-decoration: none;
+    font-size: 13px;
+  }
+  .nav-links a:hover { color: var(--fg); }
+
+  /* HERO */
+  .hero {
+    margin-bottom: 56px;
+  }
+  .hero h1 {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.8px;
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .hero p {
+    color: var(--fg2);
+    max-width: 520px;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+  .install-block {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--fg);
+    color: var(--bg);
+    padding: 10px 16px;
+    border-radius: 2px;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .install-block .cmd { color: var(--bg); opacity: 0.9; }
+  .install-block .copy-btn {
+    background: none;
+    border: none;
+    color: var(--bg);
+    opacity: 0.55;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 0;
+    transition: opacity 0.15s;
+  }
+  .install-block .copy-btn:hover { opacity: 1; }
+  .install-block .copy-btn.copied { opacity: 1; color: #6fe0a0; }
+
+  /* SECTIONS */
+  section { margin-bottom: 52px; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--fg3);
+    margin-bottom: 16px;
+  }
+  h2 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    letter-spacing: -0.3px;
+  }
+
+  /* WHAT IT TRACKS */
+  .tracks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .track-item {
+    background: var(--bg);
+    padding: 12px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .track-item .bullet {
+    color: var(--accent);
+    font-size: 16px;
+    line-height: 1;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .track-item .label { font-size: 13px; color: var(--fg); }
+  .track-item .sub { font-size: 12px; color: var(--fg3); margin-top: 2px; }
+
+  /* COMMANDS */
+  .cmd-table { width: 100%; border-collapse: collapse; }
+  .cmd-table tr { border-bottom: 1px solid var(--border); }
+  .cmd-table tr:last-child { border-bottom: none; }
+  .cmd-table td { padding: 10px 0; vertical-align: top; }
+  .cmd-table td:first-child { width: 58%; padding-right: 16px; }
+  .cmd-name {
+    color: var(--fg);
+    font-size: 13px;
+  }
+  .cmd-name .arg { color: var(--fg3); }
+  .cmd-desc { font-size: 13px; color: var(--fg2); }
+
+  /* INTERACTIVE DIFF */
+  .diff-demo {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .diff-toolbar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .diff-toolbar-title { font-size: 12px; color: var(--fg2); }
+  .diff-selector { display: flex; gap: 8px; }
+  .diff-btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--fg2);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.12s;
+  }
+  .diff-btn.active {
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
+  }
+  .diff-btn:hover:not(.active) {
+    background: var(--bg2);
+    color: var(--fg);
+  }
+  .diff-body { padding: 16px; font-size: 13px; }
+  .diff-header {
+    font-size: 12px;
+    color: var(--fg3);
+    margin-bottom: 12px;
+  }
+  .diff-header strong { color: var(--fg); font-weight: 500; }
+
+  .diff-section-title {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--fg3);
+    margin: 16px 0 8px;
+  }
+  .diff-section-title:first-child { margin-top: 0; }
+
+  .diff-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+    border-bottom: 1px dotted var(--border);
+    transition: background 0.1s;
+  }
+  .diff-row:last-child { border-bottom: none; }
+  .diff-row:hover { background: var(--bg2); }
+  .diff-icon { width: 18px; font-size: 13px; flex-shrink: 0; text-align: center; }
+  .diff-key { flex: 1; color: var(--fg); }
+  .diff-val { color: var(--fg2); font-size: 12px; text-align: right; }
+  .diff-val .from { color: var(--rem); }
+  .diff-val .arrow { color: var(--fg3); margin: 0 4px; }
+  .diff-val .to { color: var(--add); }
+
+  .tag-ok   { color: #2a8a56; }
+  .tag-warn { color: var(--warn); }
+  .tag-add  { color: var(--add); }
+  .tag-rem  { color: var(--rem); }
+
+  .diff-table-wrapper {
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .diff-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .diff-table thead { background: var(--bg2); }
+  .diff-table th { padding: 6px 12px; text-align: left; color: var(--fg3); font-weight: 400; border-bottom: 1px solid var(--border); }
+  .diff-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  .diff-table tr:last-child td { border-bottom: none; }
+  .diff-table tr:hover td { background: var(--bg2); }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 7px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .badge-warn  { background: var(--warn-bg); color: var(--warn); }
+  .badge-add   { background: var(--add-bg); color: var(--add); }
+  .badge-rem   { background: var(--rem-bg); color: var(--rem); }
+
+  /* AUTO HOOK */
+  .hook-steps { counter-reset: step; }
+  .hook-step {
+    display: flex;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .hook-step:last-child { border-bottom: none; }
+  .hook-step-num {
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--fg3);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .hook-step-body { flex: 1; }
+  .hook-step-body p { color: var(--fg2); font-size: 13px; margin-bottom: 8px; }
+  .code-block {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 10px 14px;
+    font-size: 13px;
+    position: relative;
+  }
+  .code-block .copy-btn {
+    position: absolute;
+    right: 10px;
+    top: 8px;
+    background: none;
+    border: none;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg3);
+    cursor: pointer;
+    padding: 0;
+  }
+  .code-block .copy-btn:hover { color: var(--fg); }
+  .code-block .copy-btn.copied { color: var(--accent); }
+
+  /* STORAGE */
+  .storage-note {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-size: 13px;
+    color: var(--fg2);
+  }
+  .storage-note .icon { color: var(--accent); font-size: 16px; flex-shrink: 0; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--fg3);
+  }
+  footer a { color: var(--fg3); text-decoration: underline; text-underline-offset: 3px; }
+
+  .kbd {
+    display: inline-flex;
+    padding: 1px 5px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-size: 11px;
+    color: var(--fg2);
+    background: var(--bg2);
+    vertical-align: middle;
+  }
+
+  @media (max-width: 520px) {
+    .tracks-grid { grid-template-columns: 1fr; }
+    .nav-links { gap: 12px; }
+    .hero h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">snap<span>cd</span></div>
+  <nav class="nav-links">
+    <a href="#install">install</a>
+    <a href="#tracks">what it tracks</a>
+    <a href="#commands">commands</a>
+    <a href="#diff">diff</a>
+    <a href="#hook">auto-hook</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <h1>It worked yesterday.<br><em>Now you'll know why it doesn't.</em></h1>
+  <p>snapcd automatically snapshots your local dev environment every time you <code>cd</code> into a project. Diff any two snapshots to see exactly what changed — Node version, globals, env vars, open ports.</p>
+  <div class="install-block" id="install">
+    <span class="cmd">npm install -g snapcd</span>
+    <button class="copy-btn" onclick="copyText('npm install -g snapcd', this)" title="copy">copy</button>
+  </div>
+</div>
+
+<section id="tracks">
+  <div class="section-label">01 — what it tracks</div>
+  <div class="tracks-grid">
+    <div class="track-item">
+      <div class="bullet">▸</div>
+      <div>
+        <div class="label">Node.js + npm version</div>
+        <div class="sub">runtime baseline</div>
+      </div>
+    </div>
+    <div class="track-item">
+      <div class="bullet">▸</div>
+      <div>
+        <div class="label">Global npm packages</div>
+        <div class="sub">name + version of each</div>
+      </div>
+    </div>
+    <div class="track-item">
+      <div class="bullet">▸</div>
+      <div>
+        <div class="label">Environment variables</div>
+        <div class="sub">KEY, TOKEN, SECRET auto-redacted</div>
+      </div>
+    </div>
+    <div class="track-item">
+      <div class="bullet">▸</div>
+      <div>
+        <div class="label">PATH entries</div>
+        <div class="sub">full ordered list</div>
+      </div>
+    </div>
+    <div class="track-item">
+      <div class="bullet">▸</div>
+      <div>
+        <div class="label">Open ports</div>
+        <div class="sub">currently listening</div>
+      </div>
+    </div>
+    <div class="track-item">
+      <div class="bullet">▸</div>
+      <div>
+        <div class="label">System info</div>
+        <div class="sub">CWD, hostname, platform, timestamp</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="commands">
+  <div class="section-label">02 — commands</div>
+  <table class="cmd-table">
+    <tbody>
+      <tr>
+        <td><span class="cmd-name">snapback save <span class="arg">[label]</span></span></td>
+        <td><span class="cmd-desc">Save a snapshot. Label is optional.</span></td>
+      </tr>
+      <tr>
+        <td><span class="cmd-name">snapback diff</span></td>
+        <td><span class="cmd-desc">Diff the two most recent snapshots.</span></td>
+      </tr>
+      <tr>
+        <td><span class="cmd-name">snapback diff <span class="arg">&lt;label1&gt; &lt;label2&gt;</span></span></td>
+        <td><span class="cmd-desc">Diff any two named snapshots.</span></td>
+      </tr>
+      <tr>
+        <td><span class="cmd-name">snapback list</span></td>
+        <td><span class="cmd-desc">List all snapshots for the current project.</span></td>
+      </tr>
+      <tr>
+        <td><span class="cmd-name">snapback show <span class="arg">&lt;label&gt;</span></span></td>
+        <td><span class="cmd-desc">Show full details of a snapshot.</span></td>
+      </tr>
+      <tr>
+        <td><span class="cmd-name">snapback hook</span></td>
+        <td><span class="cmd-desc">Output shell hook for auto-snapshotting on cd.</span></td>
+      </tr>
+      <tr>
+        <td><span class="cmd-name">snapback clean <span class="arg">[-n &lt;number&gt;]</span></span></td>
+        <td><span class="cmd-desc">Delete old snapshots, keep last N (default: 10).</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="diff">
+  <div class="section-label">03 — diff output</div>
+  <p style="color:var(--fg2); font-size:13px; margin-bottom:16px;">Switch between example scenarios to see what the diff looks like.</p>
+
+  <div class="diff-demo">
+    <div class="diff-toolbar">
+      <span class="diff-toolbar-title">snapback diff</span>
+      <div class="diff-selector">
+        <button class="diff-btn active" onclick="showScenario('upgrade', this)">npm upgrade</button>
+        <button class="diff-btn" onclick="showScenario('port', this)">port change</button>
+        <button class="diff-btn" onclick="showScenario('clean', this)">no change</button>
+      </div>
+    </div>
+    <div class="diff-body" id="diff-body">
+      <!-- injected by JS -->
+    </div>
+  </div>
+</section>
+
+<section id="hook">
+  <div class="section-label">04 — auto-snapshot on cd</div>
+  <div class="hook-steps">
+    <div class="hook-step">
+      <div class="hook-step-num">1</div>
+      <div class="hook-step-body">
+        <p>Add the shell hook to your <code>.zshrc</code> or <code>.bashrc</code>. Works like <code>nvm</code> or <code>direnv</code> — silent, under 100ms.</p>
+        <div class="code-block">
+          eval "$(snapback hook)"
+          <button class="copy-btn" onclick="copyText('eval \"$(snapback hook)\"', this)">copy</button>
+        </div>
+      </div>
+    </div>
+    <div class="hook-step">
+      <div class="hook-step-num">2</div>
+      <div class="hook-step-body">
+        <p>Reload your shell.</p>
+        <div class="code-block">
+          source ~/.zshrc
+          <button class="copy-btn" onclick="copyText('source ~/.zshrc', this)">copy</button>
+        </div>
+      </div>
+    </div>
+    <div class="hook-step">
+      <div class="hook-step-num">3</div>
+      <div class="hook-step-body">
+        <p>From now on, every <code>cd</code> into a directory silently saves a snapshot in the background. No prompt changes, no delays.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="storage">
+  <div class="section-label">05 — storage</div>
+  <div class="storage-note">
+    <div class="icon">◈</div>
+    <div>
+      All snapshots stored locally at <code>~/.snapback/&lt;project-name&gt;/snapshots.json</code>.<br>
+      No cloud. No database. No account required. Your data stays on your machine.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>MIT License</span>
+  <span>snapcd — local env diffing</span>
+</footer>
+
+<script>
+const scenarios = {
+  upgrade: {
+    from: 'before-upgrade',
+    to: 'after-upgrade',
+    project: 'my-app',
+    core: [
+      { icon: '✅', key: 'Node.js', val: '<span class="tag-ok">v20.11.0 — unchanged</span>' },
+      { icon: '⚠️', key: 'npm', val: '<span class="from">9.8.1</span><span class="arrow">→</span><span class="to">10.2.4</span>' },
+      { icon: '✅', key: 'CWD', val: '<span class="tag-ok">/projects/my-app — unchanged</span>' },
+    ],
+    packages: [
+      { pkg: 'typescript', status: 'changed', detail: '4.9.5 → 5.3.2' },
+      { pkg: 'vercel', status: 'added', detail: '33.0.0' },
+      { pkg: 'netlify-cli', status: 'removed', detail: '17.0.0' },
+    ],
+    ports: [
+      { icon: '✚', val: '3000', cls: 'tag-add' },
+      { icon: '✗', val: '8080', cls: 'tag-rem' },
+    ]
+  },
+  port: {
+    from: 'morning',
+    to: 'afternoon',
+    project: 'api-server',
+    core: [
+      { icon: '✅', key: 'Node.js', val: '<span class="tag-ok">v18.17.0 — unchanged</span>' },
+      { icon: '✅', key: 'npm', val: '<span class="tag-ok">9.6.7 — unchanged</span>' },
+      { icon: '✅', key: 'CWD', val: '<span class="tag-ok">/projects/api-server — unchanged</span>' },
+    ],
+    packages: [],
+    ports: [
+      { icon: '✚', val: '4000', cls: 'tag-add' },
+      { icon: '✚', val: '5432', cls: 'tag-add' },
+      { icon: '✗', val: '3001', cls: 'tag-rem' },
+    ]
+  },
+  clean: {
+    from: 'snapshot-1',
+    to: 'snapshot-2',
+    project: 'static-site',
+    core: [
+      { icon: '✅', key: 'Node.js', val: '<span class="tag-ok">v21.0.0 — unchanged</span>' },
+      { icon: '✅', key: 'npm', val: '<span class="tag-ok">10.2.0 — unchanged</span>' },
+      { icon: '✅', key: 'CWD', val: '<span class="tag-ok">/projects/static-site — unchanged</span>' },
+    ],
+    packages: [],
+    ports: []
+  }
+};
+
+function badgeFor(status) {
+  if (status === 'changed') return '<span class="badge badge-warn">⚠ changed</span>';
+  if (status === 'added')   return '<span class="badge badge-add">✚ added</span>';
+  if (status === 'removed') return '<span class="badge badge-rem">✗ removed</span>';
+  return '';
+}
+
+function render(key) {
+  const s = scenarios[key];
+  let html = '';
+
+  html += `<div class="diff-header">`;
+  html += `<strong>"${s.from}"</strong> → <strong>"${s.to}"</strong> &nbsp;·&nbsp; project: ${s.project}`;
+  html += `</div>`;
+
+  html += `<div class="diff-section-title">Core</div>`;
+  s.core.forEach(r => {
+    html += `<div class="diff-row">
+      <span class="diff-icon">${r.icon}</span>
+      <span class="diff-key">${r.key}</span>
+      <span class="diff-val">${r.val}</span>
+    </div>`;
+  });
+
+  html += `<div class="diff-section-title">Global npm packages</div>`;
+  if (s.packages.length === 0) {
+    html += `<div class="diff-row"><span class="diff-icon tag-ok">✅</span><span class="diff-key" style="color:var(--fg3)">no changes</span></div>`;
+  } else {
+    html += `<div class="diff-table-wrapper"><table class="diff-table">
+      <thead><tr><th>package</th><th>status</th><th>detail</th></tr></thead><tbody>`;
+    s.packages.forEach(p => {
+      html += `<tr><td>${p.pkg}</td><td>${badgeFor(p.status)}</td><td style="color:var(--fg2);font-size:12px">${p.detail}</td></tr>`;
+    });
+    html += `</tbody></table></div>`;
+  }
+
+  html += `<div class="diff-section-title">Open ports</div>`;
+  if (s.ports.length === 0) {
+    html += `<div class="diff-row"><span class="diff-icon tag-ok">✅</span><span class="diff-key" style="color:var(--fg3)">no changes</span></div>`;
+  } else {
+    s.ports.forEach(p => {
+      html += `<div class="diff-row">
+        <span class="diff-icon ${p.cls}">${p.icon}</span>
+        <span class="diff-key">${p.val}</span>
+      </div>`;
+    });
+  }
+
+  document.getElementById('diff-body').innerHTML = html;
+}
+
+function showScenario(key, btn) {
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render(key);
+}
+
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'copy';
+      btn.classList.remove('copied');
+    }, 1800);
+  });
+}
+
+render('upgrade');
+</script>
+</body>
+</html>
