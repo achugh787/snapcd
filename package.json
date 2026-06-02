@@ -1,0 +1,31 @@
+{
+  "name": "snapback-cli",
+  "version": "1.0.0",
+  "description": "Automatically snapshot your local dev environment on cd and diff any two snapshots to see what changed.",
+  "type": "module",
+  "bin": {
+    "snapback": "./bin/snapback.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "README.md"
+  ],
+  "keywords": [
+    "developer-tools",
+    "environment",
+    "snapshot",
+    "diff",
+    "devenv",
+    "cli"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "cli-table3": "^0.6.3",
+    "commander": "^12.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
