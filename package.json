@@ -19,6 +19,15 @@
     "devenv",
     "cli"
   ],
+  "author": "akchugh-deloitte",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akchugh-deloitte/snapback-cli.git"
+  },
+  "homepage": "https://github.com/akchugh-deloitte/snapback-cli#readme",
+  "bugs": {
+    "url": "https://github.com/akchugh-deloitte/snapback-cli/issues"
+  },
   "license": "MIT",
   "dependencies": {
     "chalk": "^5.3.0",
